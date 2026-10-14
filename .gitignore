@@ -1,2 +1,5 @@
 .shots/
 *.log
+.reply-key
+data/
+data/*.db

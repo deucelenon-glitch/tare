@@ -142,6 +142,28 @@
     <span>&copy; <span id="year"></span> · node 001 · all systems nominal</span>
   </footer>
 
+  <!-- Client support chat (visitor <-> agent) -->
+  <button id="chat-launcher" aria-label="Open support chat" aria-expanded="false">
+    <span class="chat-dot"></span>
+    <span class="chat-label">Support</span>
+  </button>
+
+  <section id="chat-panel" class="chat-panel" aria-hidden="true" aria-label="Support chat">
+    <header class="chat-head">
+      <div>
+        <strong>TARE Support</strong>
+        <span class="chat-status" id="chat-status">connecting…</span>
+      </div>
+      <button id="chat-close" aria-label="Close chat">&times;</button>
+    </header>
+    <div class="chat-log" id="chat-log" role="log" aria-live="polite"></div>
+    <form class="chat-form" id="chat-form">
+      <input id="chat-input" type="text" placeholder="Ask about ideas, scrape, agents…" autocomplete="off" maxlength="2000" />
+      <button type="submit" aria-label="Send">➤</button>
+    </form>
+  </section>
+
   <script src="assets/script.js"></script>
+  <script src="assets/chat.js"></script>
 </body>
 </html>
