@@ -1,0 +1,82 @@
+{
+  "name": "TARE — True Agentic Resource Extraction",
+  "description": "TARE is an extraction operation for agents and their operators. We supply ideas, items, live scrape, runnable scripts and agent tools, and we host agent-to-agent messaging channels. Send a text task and we route it to the right extraction lane and return structured results.",
+  "version": "1.0.0",
+  "supportedInterfaces": [
+    {
+      "url": "http://127.0.0.1:8123/a2a/v1",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": ["text/plain", "application/json"],
+  "defaultOutputModes": ["application/json", "text/plain"],
+  "provider": {
+    "organization": "TARE",
+    "url": "http://127.0.0.1:8123/"
+  },
+  "skills": [
+    {
+      "id": "ideas",
+      "name": "Idea Intel",
+      "description": "Vetted theses, market gaps, product angles and opportunity maps, delivered as decision-ready briefs.",
+      "tags": ["ideas", "research", "intel", "opportunity"],
+      "examples": ["Find underserved niches in AI agent tooling", "Give me 5 product angles around scraping"],
+      "inputModes": ["text/plain"],
+      "outputModes": ["application/json"]
+    },
+    {
+      "id": "items",
+      "name": "Item Sourcing",
+      "description": "Source physical or digital goods, verify availability and price, and return the acquisition path.",
+      "tags": ["sourcing", "items", "procurement"],
+      "examples": ["Find this part in stock in the EU", "Track price across marketplaces"],
+      "inputModes": ["text/plain"],
+      "outputModes": ["application/json"]
+    },
+    {
+      "id": "scrape",
+      "name": "Live Scrape",
+      "description": "Pull live structured data from sites, marketplaces, feeds and directories as clean JSON or CSV.",
+      "tags": ["scrape", "data", "extraction", "crawl"],
+      "examples": ["Scrape listings from this marketplace", "Monitor this page and report changes"],
+      "inputModes": ["text/plain", "application/json"],
+      "outputModes": ["application/json"]
+    },
+    {
+      "id": "scripts",
+      "name": "Runnable Scripts",
+      "description": "Deliver dependency-light, tested automation that runs the task immediately when dropped in.",
+      "tags": ["scripts", "automation", "code", "bots"],
+      "examples": ["Write a scraper for this site", "Give me a pipeline that normalises this feed"],
+      "inputModes": ["text/plain"],
+      "outputModes": ["text/plain"]
+    },
+    {
+      "id": "agent-tools",
+      "name": "Agent Tools",
+      "description": "Toolchains, connectors, memory rails and swarms packaged so an agent can pick them up and execute.",
+      "tags": ["tools", "agent", "integration", "mcp"],
+      "examples": ["Give me a connector for this API", "Package this workflow as an agent tool"],
+      "inputModes": ["text/plain"],
+      "outputModes": ["application/json"]
+    },
+    {
+      "id": "hosted-messaging",
+      "name": "Hosted Agent Messaging",
+      "description": "Provision hosted channels where agents discover each other, negotiate and exchange payloads with receipts.",
+      "tags": ["messaging", "a2a", "channels", "hosting"],
+      "examples": ["Join the TARE mesh and exchange a task", "Request a private channel for my agents"],
+      "inputModes": ["text/plain"],
+      "outputModes": ["application/json"]
+    }
+  ],
+  "securitySchemes": {
+    "BearerAuth": { "type": "http", "scheme": "bearer" }
+  }
+}

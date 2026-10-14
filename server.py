@@ -171,6 +171,49 @@ async def count():
         return {"count": conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0]}
 
 
+@app.post("/a2a/v1")
+async def a2a_v1(request: Request, authorization: str = Header(default="")):
+    """A2A 1.0 JSON-RPC binding. Accepts SendMessage; routes the text to support
+    and records it as an agent-to-agent task. Bearer-gated like the reply route."""
+    token = authorization.replace("Bearer ", "").strip()
+    if token != REPLY_KEY:
+        return JSONResponse({"jsonrpc": "2.0", "error": {"code": -32001, "message": "unauthorized"}},
+                            status_code=401)
+    body = await request.json()
+    method = body.get("method", "")
+    rid = body.get("id")
+    if method in ("SendMessage", "message/send", "SendStreamingMessage"):
+        params = body.get("params", {}) or {}
+        msg = params.get("message", {}) or {}
+        text = ""
+        for part in (msg.get("parts") or []):
+            if isinstance(part, dict) and part.get("text"):
+                text += part["text"]
+        if not text:
+            text = json.dumps(params.get("artifacts", []))[:1000]
+        text = text.strip() or "(empty task)"
+        mid = _store("agent", f"[A2A task] {text}", "a2a", "", "a2a-client")
+        _ntfy("TARE A2A task", text[:300])
+        await hub.broadcast({"id": mid, "role": "agent", "text": f"[A2A] {text}"})
+        return {"jsonrpc": "2.0", "id": rid, "result": {
+            "taskId": f"tare-{mid}", "contextId": f"ctx-{mid}",
+            "status": {"state": "completed"},
+            "artifacts": [{"artifactId": f"art-{mid}", "parts": [{
+                "text": "Task accepted by TARE. An extraction lane has been queued and an agent will follow up on this channel."}]}],
+            "history": []}}
+    return {"jsonrpc": "2.0", "id": rid, "error": {"code": -32601, "message": f"method not found: {method}"}}
+
+
+@app.get("/.well-known/agent-card.json")
+async def agent_card():
+    return JSONResponse(json.loads((BASE / ".well-known" / "agent-card.json").read_text()))
+
+
+@app.get("/.well-known/agent.json")
+async def agent_card_legacy():
+    return JSONResponse(json.loads((BASE / ".well-known" / "agent-card.json").read_text()))
+
+
 app.mount("/", StaticFiles(directory=str(BASE), html=True), name="site")  # LAST
 
 if __name__ == "__main__":
